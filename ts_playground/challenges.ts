@@ -63,3 +63,55 @@ type FindIndexTest = FindIndex<[1, 2, "3", "4", any, 5], 5>; // 5
 
 // type test = 4 extends any ? true : false; // true
 // type test = any extends 4 ? true : false; // boolean 因为any会走三元的两边（分发）
+
+type TupleToEnum<T extends any[], I = false> = {
+  readonly [K in T[number]]: IsEqual<I, true, FindIndex<T, K>, K>;
+};
+
+type TupleToEnumTest = TupleToEnum<["hello", "world"]>;
+type TupleToEnumsTest2 = TupleToEnum<["hello", "world"], true>;
+
+/*
+function slice(t, s, e, sa, ea, result) {
+const [L, ...R] = t
+if (sa["length"] === s) {
+  // 如果start和end都到了 就返回result
+  if (ea["length"] === e) {
+    return result
+  } else {
+    // 如果start到了但是end不到，end 数组push个null，并且slice result 递归调用
+    return slice(r, s, e, sa, [...ea, null], [...result, l])
+  }
+} else {
+  // 如果start还不到，就继续传入R
+  return slice(R, s, e, [...sa, null], ea, result)
+}
+}
+*/
+type Slice<
+  T extends any[],
+  S extends number,
+  E extends number = T["length"],
+  SA extends any[] = [],
+  EA extends any[] = [],
+  Result extends any[] = []
+> = T extends [infer L, ...infer R]
+  ? SA["length"] extends S
+    ? EA["length"] extends E
+      ? [...Result, L] // sa.length === s && ea.length === e
+      : Slice<R, S, E, SA, [...EA, null], [...Result, L]> // sa.length === s && ea.length !== e sa.length 不动,ea.length + 1, result.push(L)
+    : Slice<R, S, E, [...SA, null], [...EA, null], Result> // sa.length !== s  sa和ea都push个null, result不动
+  : Result;
+
+type SliceTest = Slice<[1, 2, 3, 4, 5], 0, 2>; // [1, 2, 3]
+type SliceTest2 = Slice<[1, 2, 3, 4, 5], 2, 4>; // [3, 4, 5]
+
+type GetOptions<T> = {
+  [K in keyof T as T[K] extends Required<T>[K] ? never : K]: T[K];
+};
+
+type GetOptionsTest = GetOptions<{
+  a: string;
+  b?: number;
+  c?: boolean;
+}>;
