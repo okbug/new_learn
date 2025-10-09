@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "file-reader": {
+      "command": "node",
+      "args": ["/Users/ajunge/Desktop/study/new_learn/ai_playground/file-reader-mcp/index.js"],
+      "env": {}
+    }
+  }
+}

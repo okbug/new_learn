@@ -1,0 +1,60 @@
+{
+  "name": "Trae AI File Reader MCP Configuration",
+  "version": "1.0.0",
+  "description": "在 Trae AI 中使用 File Reader MCP 的配置",
+  "mcpServers": {
+    "file-reader": {
+      "command": "node",
+      "args": ["/Users/ajunge/Desktop/study/new_learn/ai_playground/file-reader-mcp/index.js"],
+      "env": {
+        "NODE_ENV": "development",
+        "MCP_LOG_LEVEL": "info"
+      },
+      "description": "本地文件读取服务 - 支持安全的文件内容读取",
+      "capabilities": [
+        "read_file",
+        "read_file_lines", 
+        "get_file_info"
+      ],
+      "workingDirectory": "/Users/ajunge/Desktop/study/new_learn",
+      "autoRestart": true,
+      "timeout": 30000
+    }
+  },
+  "usage": {
+    "examples": [
+      {
+        "description": "读取项目配置文件",
+        "command": "请读取我的 package.json 文件并分析依赖"
+      },
+      {
+        "description": "代码审查",
+        "command": "请审查 src/components/App.vue 文件的代码质量"
+      },
+      {
+        "description": "文档分析",
+        "command": "总结 README.md 文件的主要内容"
+      },
+      {
+        "description": "配置检查",
+        "command": "检查 tsconfig.json 配置是否正确"
+      }
+    ]
+  },
+  "security": {
+    "allowedPaths": [
+      "/Users/ajunge/Desktop/study/new_learn",
+      "./ai_playground",
+      "./react_study",
+      "./ts_playground",
+      "./rust_playground"
+    ],
+    "allowedExtensions": [
+      ".js", ".ts", ".vue", ".jsx", ".tsx",
+      ".json", ".md", ".txt", ".yml", ".yaml",
+      ".html", ".css", ".scss", ".less",
+      ".rs", ".toml", ".lock"
+    ],
+    "maxFileSize": "10MB"
+  }
+}
