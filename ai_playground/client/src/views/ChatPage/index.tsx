@@ -2,14 +2,20 @@ import { Bubble, Sender } from "@ant-design/x";
 import { useState } from "react";
 import type { ChatItem } from "./module/types";
 import { sleep } from "../../utils";
+import { useCycle } from "../../hooks/useCycle";
 
 const ChatPage = () => {
   const [chatList, setChatList] = useState<ChatItem[]>([]);
   const [input, setInput] = useState("");
   const [inputLoading, setInputLoading] = useState(false);
+  const [mode, cycle] = useCycle("low", "medium", "high");
 
   return (
     <div>
+      <div>
+        <p>State: {mode}</p>
+        <button onClick={cycle}>Cycle</button>
+      </div>
       {chatList.map((item, index) => (
         <Bubble
           key={index}

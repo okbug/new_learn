@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser</title>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+      var historyObj = window.history;
+      var root = document.getElementById('root');
+      function updateContent(content){
+        root.innerHTML = content;
+      }
+      //当路径导航的时候，路径切换的时候会触发一个事件，popState
+      window.addEventListener('popstate',(event)=>{
+        updateContent(window.location.pathname);
+      });
+      //因为调用pushState方法并不会触发popState事件，所以在调用pushState的时候虽然路径变了，但内容并没有改变
+      (function(historyObj){
+        let oldPushState = historyObj.pushState;
+        historyObj.pushState = function(state,title,url){
+            //先执行老的pushState方法
+            let result = oldPushState.apply(historyObj,arguments);
+            updateContent(url);
+            return result;
+        }
+        let oldReplaceState = historyObj.replaceState;
+        historyObj.replaceState = function(state,title,url){
+            //先执行老的pushState方法
+            let result = oldReplaceState.apply(historyObj,arguments);
+            updateContent(url);
+            return result;
+        }
+      })(history);
+      setTimeout(()=>{
+        historyObj.pushState({page:1},'','/page1')
+      },1000);
+      setTimeout(()=>{
+        historyObj.pushState({page:2},'','/page2')
+      },2000);
+      setTimeout(()=>{
+        historyObj.pushState({page:3},'','/page3')
+      },3000);
+      setTimeout(()=>{
+        historyObj.back();
+      },4000);
+      setTimeout(()=>{
+        historyObj.pushState({page:4},'','/page4')
+      },5000);
+      setTimeout(()=>{
+        historyObj.go(1)
+      },6000);
+    </script>
+</body>
+</html>

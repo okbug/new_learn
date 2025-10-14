@@ -1,0 +1,31 @@
+{
+	"name": "1.basic",
+	"version": "1.2.0",
+	"description": "The base template for Create React App.",
+	"license": "MIT",
+	"dependencies": {
+		"cross-env": "^7.0.3",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-scripts": "^5.0.1",
+		"zhang-utils": "^1.0.2"
+	},
+	"scripts": {
+		"start": "cross-env DISABLE_NEW_JSX_TRANSFORM=true react-scripts start",
+		"build": "cross-env DISABLE_NEW_JSX_TRANSFORM=true react-scripts build",
+		"test": "cross-env DISABLE_NEW_JSX_TRANSFORM=true react-scripts test",
+		"eject": "cross-env DISABLE_NEW_JSX_TRANSFORM=true react-scripts eject"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}

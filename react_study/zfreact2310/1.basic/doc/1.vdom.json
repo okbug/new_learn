@@ -1,0 +1,21 @@
+{
+    "type": "div",
+    "props": {
+      "style": {
+        "color": "red"
+      },
+      "className": "container",
+      "children": [
+        "hello",
+        {
+          "type": "span",
+          "props": {
+            "style": {
+              "color": "blue"
+            },
+            "children": "world"
+          }
+        }
+      ]
+    }
+  }

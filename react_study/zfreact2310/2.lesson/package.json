@@ -1,0 +1,36 @@
+{
+	"name": "2.lesson",
+	"version": "1.2.0",
+	"description": "The base template for Create React App.",
+	"license": "MIT",
+	"dependencies": {
+		"@welldone-software/why-did-you-render": "^7.0.1",
+		"antd": "^5.11.3",
+		"cross-env": "^7.0.3",
+		"hoist-non-react-statics": "^3.3.2",
+		"immer": "^10.0.3",
+		"memoize-one": "^6.0.0",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-scripts": "^5.0.1",
+		"styled-components": "^6.1.1"
+	},
+	"scripts": {
+		"start": "cross-env DISABLE_NEW_JSX_TRANSFORM=true  react-scripts start",
+		"build": "cross-env DISABLE_NEW_JSX_TRANSFORM=true react-scripts build",
+		"test": "cross-env DISABLE_NEW_JSX_TRANSFORM=true  react-scripts test",
+		"eject": "cross-env DISABLE_NEW_JSX_TRANSFORM=true  react-scripts eject"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	}
+}

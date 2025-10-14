@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    let frameCount = 0;//当前的帧的数量
+    let lastSecond = Date.now();//0
+    let fps = 0;//当前的FPS值
+    function updateFrameCount(){
+        frameCount++;//帧数加1
+        const now = Date.now();//获取最新的时间戳 1000
+        //如果最新的时间戳减去lastSecond大于等1秒
+        if(now - lastSecond>=1000){
+            fps=frameCount;//让FPS值等于最近一秒内的帧的数量
+            frameCount=0;
+            lastSecond=now;
+            console.log(`FPS: ${fps}`)
+        }
+        requestAnimationFrame(updateFrameCount);
+    }
+    //requestAnimationFrame方法是告诉 浏览器你希望执行动画
+    //并请求浏览器在下次重绘之前调用你指定的回调函数
+    //这个回调函数的执行频率就会和浏览器的重绘频率一次
+    requestAnimationFrame(updateFrameCount);
+</script>
+</body>
+</html>

@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ErrorCode,
   ListToolsRequestSchema,
   McpError,
-} from '@modelcontextprotocol/sdk/types.js';
-import fs from 'fs/promises';
-import path from 'path';
+} from "@modelcontextprotocol/sdk/types.js";
+import fs from "fs/promises";
+import path from "path";
 
 class FileReaderServer {
   constructor() {
     this.server = new Server(
       {
-        name: 'file-reader-mcp',
-        version: '1.0.0',
+        name: "file-reader-mcp",
+        version: "1.0.0",
       },
       {
         capabilities: {
@@ -34,66 +34,66 @@ class FileReaderServer {
       return {
         tools: [
           {
-            name: 'read_file',
-            description: '读取指定文件的内容',
+            name: "read_file",
+            description: "读取指定文件的内容",
             inputSchema: {
-              type: 'object',
+              type: "object",
               properties: {
                 path: {
-                  type: 'string',
-                  description: '要读取的文件路径（绝对路径或相对路径）',
+                  type: "string",
+                  description: "要读取的文件路径（绝对路径或相对路径）",
                 },
                 encoding: {
-                  type: 'string',
-                  description: '文件编码格式（默认为 utf8）',
-                  default: 'utf8',
-                  enum: ['utf8', 'ascii', 'base64', 'hex', 'binary'],
+                  type: "string",
+                  description: "文件编码格式（默认为 utf8）",
+                  default: "utf8",
+                  enum: ["utf8", "ascii", "base64", "hex", "binary"],
                 },
               },
-              required: ['path'],
+              required: ["path"],
             },
           },
           {
-            name: 'read_file_lines',
-            description: '读取文件的指定行范围',
+            name: "read_file_lines",
+            description: "读取文件的指定行范围",
             inputSchema: {
-              type: 'object',
+              type: "object",
               properties: {
                 path: {
-                  type: 'string',
-                  description: '要读取的文件路径',
+                  type: "string",
+                  description: "要读取的文件路径",
                 },
                 start_line: {
-                  type: 'number',
-                  description: '起始行号（从1开始）',
+                  type: "number",
+                  description: "起始行号（从1开始）",
                   minimum: 1,
                 },
                 end_line: {
-                  type: 'number',
-                  description: '结束行号（包含该行）',
+                  type: "number",
+                  description: "结束行号（包含该行）",
                   minimum: 1,
                 },
                 encoding: {
-                  type: 'string',
-                  description: '文件编码格式（默认为 utf8）',
-                  default: 'utf8',
+                  type: "string",
+                  description: "文件编码格式（默认为 utf8）",
+                  default: "utf8",
                 },
               },
-              required: ['path', 'start_line', 'end_line'],
+              required: ["path", "start_line", "end_line"],
             },
           },
           {
-            name: 'get_file_info',
-            description: '获取文件的基本信息（大小、修改时间等）',
+            name: "get_file_info",
+            description: "获取文件的基本信息（大小、修改时间等）",
             inputSchema: {
-              type: 'object',
+              type: "object",
               properties: {
                 path: {
-                  type: 'string',
-                  description: '要查询的文件路径',
+                  type: "string",
+                  description: "要查询的文件路径",
                 },
               },
-              required: ['path'],
+              required: ["path"],
             },
           },
         ],
@@ -106,17 +106,14 @@ class FileReaderServer {
 
       try {
         switch (name) {
-          case 'read_file':
+          case "read_file":
             return await this.readFile(args);
-          case 'read_file_lines':
+          case "read_file_lines":
             return await this.readFileLines(args);
-          case 'get_file_info':
+          case "get_file_info":
             return await this.getFileInfo(args);
           default:
-            throw new McpError(
-              ErrorCode.MethodNotFound,
-              `未知的工具: ${name}`
-            );
+            throw new McpError(ErrorCode.MethodNotFound, `未知的工具: ${name}`);
         }
       } catch (error) {
         if (error instanceof McpError) {
@@ -131,20 +128,17 @@ class FileReaderServer {
   }
 
   async readFile(args) {
-    const { path: filePath, encoding = 'utf8' } = args;
+    const { path: filePath, encoding = "utf8" } = args;
 
     if (!filePath) {
-      throw new McpError(ErrorCode.InvalidParams, '文件路径不能为空');
+      throw new McpError(ErrorCode.InvalidParams, "文件路径不能为空");
     }
 
     try {
       // 安全检查：确保路径不包含危险字符
       const normalizedPath = path.normalize(filePath);
-      if (normalizedPath.includes('..')) {
-        throw new McpError(
-          ErrorCode.InvalidParams,
-          '不允许访问上级目录'
-        );
+      if (normalizedPath.includes("..")) {
+        throw new McpError(ErrorCode.InvalidParams, "不允许访问上级目录");
       }
 
       const content = await fs.readFile(normalizedPath, encoding);
@@ -153,20 +147,26 @@ class FileReaderServer {
       return {
         content: [
           {
-            type: 'text',
+            type: "text",
             text: `文件路径: ${normalizedPath}\n文件大小: ${stats.size} 字节\n编码格式: ${encoding}\n\n文件内容:\n${content}`,
           },
         ],
       };
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if (error.code === "ENOENT") {
         throw new McpError(ErrorCode.InvalidParams, `文件不存在: ${filePath}`);
       }
-      if (error.code === 'EACCES') {
-        throw new McpError(ErrorCode.InvalidParams, `没有权限访问文件: ${filePath}`);
+      if (error.code === "EACCES") {
+        throw new McpError(
+          ErrorCode.InvalidParams,
+          `没有权限访问文件: ${filePath}`
+        );
       }
-      if (error.code === 'EISDIR') {
-        throw new McpError(ErrorCode.InvalidParams, `路径是目录而不是文件: ${filePath}`);
+      if (error.code === "EISDIR") {
+        throw new McpError(
+          ErrorCode.InvalidParams,
+          `路径是目录而不是文件: ${filePath}`
+        );
       }
       throw new McpError(
         ErrorCode.InternalError,
@@ -176,31 +176,25 @@ class FileReaderServer {
   }
 
   async readFileLines(args) {
-    const { path: filePath, start_line, end_line, encoding = 'utf8' } = args;
+    const { path: filePath, start_line, end_line, encoding = "utf8" } = args;
 
     if (!filePath) {
-      throw new McpError(ErrorCode.InvalidParams, '文件路径不能为空');
+      throw new McpError(ErrorCode.InvalidParams, "文件路径不能为空");
     }
 
     if (start_line > end_line) {
-      throw new McpError(
-        ErrorCode.InvalidParams,
-        '起始行号不能大于结束行号'
-      );
+      throw new McpError(ErrorCode.InvalidParams, "起始行号不能大于结束行号");
     }
 
     try {
       const normalizedPath = path.normalize(filePath);
-      if (normalizedPath.includes('..')) {
-        throw new McpError(
-          ErrorCode.InvalidParams,
-          '不允许访问上级目录'
-        );
+      if (normalizedPath.includes("..")) {
+        throw new McpError(ErrorCode.InvalidParams, "不允许访问上级目录");
       }
 
       const content = await fs.readFile(normalizedPath, encoding);
-      const lines = content.split('\n');
-      
+      const lines = content.split("\n");
+
       if (start_line > lines.length) {
         throw new McpError(
           ErrorCode.InvalidParams,
@@ -209,13 +203,16 @@ class FileReaderServer {
       }
 
       const selectedLines = lines.slice(start_line - 1, end_line);
-      const result = selectedLines.join('\n');
+      const result = selectedLines.join("\n");
 
       return {
         content: [
           {
-            type: 'text',
-            text: `文件路径: ${normalizedPath}\n行范围: ${start_line}-${Math.min(end_line, lines.length)}\n总行数: ${lines.length}\n\n内容:\n${result}`,
+            type: "text",
+            text: `文件路径: ${normalizedPath}\n行范围: ${start_line}-${Math.min(
+              end_line,
+              lines.length
+            )}\n总行数: ${lines.length}\n\n内容:\n${result}`,
           },
         ],
       };
@@ -223,7 +220,7 @@ class FileReaderServer {
       if (error instanceof McpError) {
         throw error;
       }
-      if (error.code === 'ENOENT') {
+      if (error.code === "ENOENT") {
         throw new McpError(ErrorCode.InvalidParams, `文件不存在: ${filePath}`);
       }
       throw new McpError(
@@ -237,16 +234,13 @@ class FileReaderServer {
     const { path: filePath } = args;
 
     if (!filePath) {
-      throw new McpError(ErrorCode.InvalidParams, '文件路径不能为空');
+      throw new McpError(ErrorCode.InvalidParams, "文件路径不能为空");
     }
 
     try {
       const normalizedPath = path.normalize(filePath);
-      if (normalizedPath.includes('..')) {
-        throw new McpError(
-          ErrorCode.InvalidParams,
-          '不允许访问上级目录'
-        );
+      if (normalizedPath.includes("..")) {
+        throw new McpError(ErrorCode.InvalidParams, "不允许访问上级目录");
       }
 
       const stats = await fs.stat(normalizedPath);
@@ -255,7 +249,7 @@ class FileReaderServer {
       return {
         content: [
           {
-            type: 'text',
+            type: "text",
             text: `文件信息:
 路径: ${normalizedPath}
 文件名: ${parsedPath.base}
@@ -274,7 +268,7 @@ class FileReaderServer {
       if (error instanceof McpError) {
         throw error;
       }
-      if (error.code === 'ENOENT') {
+      if (error.code === "ENOENT") {
         throw new McpError(ErrorCode.InvalidParams, `文件不存在: ${filePath}`);
       }
       throw new McpError(
@@ -287,7 +281,7 @@ class FileReaderServer {
   async run() {
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
-    console.error('File Reader MCP 服务器已启动');
+    console.error("File Reader MCP 服务器已启动");
   }
 }
 
