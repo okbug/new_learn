@@ -122,7 +122,7 @@ const updateDOM = (
         removePropValue as EventListener
       );
     } else if (removePropKey !== defaultPropKeys) {
-      // !@ts-expect-error: Unreachable code error
+      // @ts-expect-error: Unreachable code error
       DOM[removePropKey] = "";
     }
   }
@@ -134,7 +134,7 @@ const updateDOM = (
         addPropValue as EventListener
       );
     } else if (addPropKey !== defaultPropKeys) {
-      // !@ts-expect-error: Unreachable code error
+      // @ts-expect-error: Unreachable code error
       DOM[addPropKey] = addPropValue;
     }
   }
