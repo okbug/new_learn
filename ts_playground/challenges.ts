@@ -115,3 +115,15 @@ type GetOptionsTest = GetOptions<{
   b?: number;
   c?: boolean;
 }>;
+
+type Arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+type Item = Arr[number];
+
+type GenerateNumber<
+  T extends number,
+  R extends number[] = []
+> = T extends R["length"] ? R : GenerateNumber<T, [...R, R["length"]]>;
+
+type GenerateNumberTest = GenerateNumber<10>; // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+type GenerateNumberTest2 = GenerateNumber<10>[number]; // 0 | 5 | 1 | 2 | 3 | 4 | 6 | 7 | 8 | 9
