@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef } from "react";
 
 /**
  * 最小可用的 Jotai 核心实现（教学版）
@@ -19,13 +19,14 @@ const atomDependentsMap = new WeakMap();
  * - 如果传入的是 read 函数，可选传入 write 以支持写入
  */
 export function atom(readOrInitial, write) {
-  if (typeof readOrInitial !== 'function') {
+  if (typeof readOrInitial !== "function") {
     const initialValue = readOrInitial;
     const config = {
       init: initialValue,
       read: (get) => get(config),
       write: (get, set, update) => {
-        const next = typeof update === 'function' ? update(get(config)) : update;
+        const next =
+          typeof update === "function" ? update(get(config)) : update;
         set(config, next);
       },
     };
@@ -35,9 +36,11 @@ export function atom(readOrInitial, write) {
   const config = {
     init: null,
     read: readOrInitial,
-    write: write || ((get, set) => {
-      throw new Error('Cannot write to read-only atom');
-    }),
+    write:
+      write ||
+      ((get, set) => {
+        throw new Error("Cannot write to read-only atom");
+      }),
   };
   return config;
 }
@@ -80,7 +83,7 @@ function writeAtom(a, update) {
   const get = (target) => readAtom(target);
   const set = (target, next) => {
     const ts = getAtomState(target);
-    const value = typeof next === 'function' ? next(ts.value) : next;
+    const value = typeof next === "function" ? next(ts.value) : next;
     if (!Object.is(ts.value, value)) {
       ts.value = value;
       // 通知自身订阅者
@@ -178,7 +181,7 @@ export function atomWithStorage(key, initialValue) {
     },
     // write
     (get, set, update) => {
-      const next = typeof update === 'function' ? update(get(base)) : update;
+      const next = typeof update === "function" ? update(get(base)) : update;
       try {
         localStorage.setItem(key, JSON.stringify(next));
       } catch {}
@@ -189,7 +192,7 @@ export function atomWithStorage(key, initialValue) {
 }
 
 // 工具：支持重置的 atom
-export const RESET = Symbol('RESET');
+export const RESET = Symbol("RESET");
 export function atomWithReset(initialValue) {
   const base = atom(initialValue);
   return atom(
@@ -202,7 +205,7 @@ export function atomWithReset(initialValue) {
 }
 
 // Debug 辅助：打印 atom 内部状态（教学用途）
-export function debugAtom(a, label = 'Atom') {
+export function debugAtom(a, label = "Atom") {
   const st = getAtomState(a);
   console.log(`[${label}]`, {
     value: st.value,
