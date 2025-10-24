@@ -1,3 +1,18 @@
+// 声明模块 - 告诉编译器包含这些模块
+mod example; // 对应 example.rs
+mod utils; // 对应 utils.rs
+
+// 新增：Rust 学习难点示例模块
+mod ownership_examples;
+mod lifetime_examples;
+mod trait_generic_examples;
+mod smart_pointer_examples;
+mod concurrency_examples;
+
+// 导入模块中的函数和类型
+use example::run_all_examples;
+use utils::{math_utils, multiply, string_utils};
+
 fn plus_one(x: Option<i32>) -> Option<i32> {
     match x {
         None => None,
@@ -10,6 +25,8 @@ struct EStruct {
 }
 
 fn main() {
+    println!("=== 原有代码示例 ===\n");
+
     let condition = true;
 
     let number = if true { 5 } else { 6 };
@@ -63,9 +80,65 @@ fn main() {
     // 整数默认为i32，浮点默认为f64
 
     // 这个函数如果没使用，这个函数中引用的其他函数也会被标记为unused
-    // main_ownership()
+    main_ownership();
 
-    main_reference()
+    main_reference();
+
+    // ==========================================
+    // 新增：演示模块导入和使用
+    // ==========================================
+    println!("\n\n=== 模块导入演示 ===\n");
+
+    // 1. 使用从 utils 模块导入的函数
+    println!("使用 utils 模块的函数:");
+    println!("15 + 25 = {}", utils::add(15, 25));
+    println!("6 * 7 = {}", multiply(6, 7));
+
+    // 2. 使用 utils 中的子模块
+    println!("\n使用 utils::string_utils:");
+    let text = "Rust Programming";
+    println!("反转 '{}': {}", text, string_utils::reverse(text));
+    println!("大写: {}", string_utils::to_uppercase(text));
+
+    println!("\n使用 utils::math_utils:");
+    let numbers = vec![10, 20, 30, 40, 50];
+    println!("数组: {:?}", numbers);
+    println!("平均值: {}", math_utils::average(&numbers));
+
+    // 3. 运行 example 模块中的所有示例
+    println!("\n\n");
+    println!("{}", "=".repeat(50));
+    run_all_examples();
+
+    // 4. 也可以直接调用 utils 模块的 demo 函数
+    utils::demo_utils();
+
+    // ==========================================
+    // 新增：Rust 学习难点示例
+    // ==========================================
+    println!("\n\n╔══════════════════════════════════════════════════╗");
+    println!("║  欢迎学习 Rust 核心难点！                       ║");
+    println!("║  以下是 5 个最重要且最难的概念                  ║");
+    println!("╚══════════════════════════════════════════════════╝\n");
+
+    println!("💡 提示：你可以注释/取消注释下面的函数来运行特定示例\n");
+
+    // 1. 所有权系统示例
+    // ownership_examples::run_all_ownership_examples();
+
+    // 2. 生命周期示例
+    // lifetime_examples::run_all_lifetime_examples();
+
+    // 3. Trait 和泛型示例
+    // trait_generic_examples::run_all_trait_generic_examples();
+
+    // 4. 智能指针示例
+    // smart_pointer_examples::run_all_smart_pointer_examples();
+
+    // 5. 并发编程示例
+    // concurrency_examples::run_all_concurrency_examples();
+
+    println!("\n📚 查看 RUST_LEARNING_GUIDE.md 了解更多学习资源和建议！");
 }
 
 fn add(x: u32, y: u32) -> u32 {
