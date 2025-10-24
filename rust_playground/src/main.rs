@@ -4,9 +4,11 @@ fn plus_one(x: Option<i32>) -> Option<i32> {
         Some(i) => Some(i + 1),
     }
 }
+
 struct EStruct {
     e: i32,
 }
+
 fn main() {
     let condition = true;
 
