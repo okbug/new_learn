@@ -40,8 +40,6 @@ export class AppModule implements NestModule {
    * 可以指定中间件应用到哪些路由
    */
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes('*'); // 应用到所有路由
+    consumer.apply(LoggerMiddleware).forRoutes('*'); // 应用到所有路由
   }
 }
